@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Assignment">
+
+	<executable package_path="ariac_flexbe_behaviors.assignment_sm" class="AssignmentSM" />
+	<tagstring>Assignment</tagstring>
+	<author>Bas Abrahamse</author>
+	<date>Tue May 12 2020</date>
+	<description>
+		Test
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="notify_shipment_ready" />
+
+	<!-- Available Parameters -->
+
+</behavior>
