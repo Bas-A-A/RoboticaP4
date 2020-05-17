@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Bin_to_AGV_State">
+
+	<executable package_path="ariac_flexbe_behaviors.bin_to_agv_state_sm" class="Bin_to_AGV_StateSM" />
+	<tagstring>Assignment</tagstring>
+	<author>Bas Abrahamse</author>
+	<date>Tue May 12 2020</date>
+	<description>
+		Test
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="notify_shipment_ready" />
+
+	<!-- Available Parameters -->
+
+</behavior>
