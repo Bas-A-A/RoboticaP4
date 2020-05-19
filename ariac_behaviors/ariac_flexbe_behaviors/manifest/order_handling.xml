@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Order_handling">
+
+	<executable package_path="ariac_flexbe_behaviors.order_handling_sm" class="Order_handlingSM" />
+	<tagstring></tagstring>
+	<author>Joost van Aken</author>
+	<date>Tue May 19 2020</date>
+	<description>
+		Order handling
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="notify_shipment_ready" />
+	<contains name="transport_part_form_bin_to_agv_state" />
+
+	<!-- Available Parameters -->
+
+</behavior>

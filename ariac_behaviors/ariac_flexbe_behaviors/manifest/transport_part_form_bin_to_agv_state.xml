@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="notify_shipment_ready" />
+	<contains name="Cameras2" />
 
 	<!-- Available Parameters -->
 
