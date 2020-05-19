@@ -53,7 +53,7 @@ class Order_handlingSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:401, x:769 y:5
+		# x:144 y:698, x:147 y:461
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.order_id = ''
 		_state_machine.userdata.shipments = []
@@ -67,6 +67,7 @@ class Order_handlingSM(Behavior):
 		_state_machine.userdata.part_pose = []
 		_state_machine.userdata.one_value = 1
 		_state_machine.userdata.zero_value = 0
+		_state_machine.userdata.shipment_type = ''
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -81,7 +82,7 @@ class Order_handlingSM(Behavior):
 										transitions={'continue': 'GetOrder'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:205 y:314
+			# x:190 y:41
 			OperatableStateMachine.add('GetOrder',
 										GetOrderState(),
 										transitions={'continue': 'GetProductsFromShipment'},
@@ -95,62 +96,62 @@ class Order_handlingSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'shipments': 'shipments', 'index': 'shipment_index', 'shipment_type': 'shipment_type', 'agv_id': 'agv_id', 'products': 'products', 'number_of_products': 'number_of_products'})
 
-			# x:711 y:163
+			# x:670 y:38
 			OperatableStateMachine.add('GetPartFromProduct',
 										GetPartFromProductsState(),
 										transitions={'continue': 'transport_part_form_bin_to_agv_state', 'invalid_index': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'invalid_index': Autonomy.Off},
 										remapping={'products': 'products', 'index': 'product_index', 'type': 'part_type', 'pose': 'part_pose'})
 
-			# x:956 y:43
+			# x:1211 y:34
 			OperatableStateMachine.add('IncrementProductIndex',
 										AddNumericState(),
 										transitions={'done': 'EndProducts'},
 										autonomy={'done': Autonomy.Off},
 										remapping={'value_a': 'product_index', 'value_b': 'one_value', 'result': 'product_index'})
 
-			# x:1238 y:44
+			# x:1213 y:164
 			OperatableStateMachine.add('EndProducts',
 										EqualState(),
 										transitions={'true': 'ResetProductIndex', 'false': 'GetPartFromProduct'},
 										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
-										remapping={'value_a': 'products', 'value_b': 'number_of_products'})
+										remapping={'value_a': 'product_index', 'value_b': 'number_of_products'})
 
-			# x:1645 y:49
+			# x:1214 y:282
 			OperatableStateMachine.add('ResetProductIndex',
 										ReplaceState(),
 										transitions={'done': 'IncrementShipmentIndex'},
 										autonomy={'done': Autonomy.Off},
-										remapping={'value': 'product_index', 'result': 'zero_value'})
+										remapping={'value': 'zero_value', 'result': 'product_index'})
 
-			# x:1645 y:122
+			# x:1214 y:413
 			OperatableStateMachine.add('IncrementShipmentIndex',
 										AddNumericState(),
 										transitions={'done': 'EindShipments'},
 										autonomy={'done': Autonomy.Off},
-										remapping={'value_a': 'product_index', 'value_b': 'one_value', 'result': 'product_index'})
+										remapping={'value_a': 'shipment_index', 'value_b': 'one_value', 'result': 'shipment_index'})
 
-			# x:1642 y:229
+			# x:1215 y:541
 			OperatableStateMachine.add('EindShipments',
 										EqualState(),
 										transitions={'true': 'ResetShipmentIndex', 'false': 'notify_shipment_ready'},
 										autonomy={'true': Autonomy.Off, 'false': Autonomy.Off},
-										remapping={'value_a': 'number_of_shipments', 'value_b': 'one_value'})
+										remapping={'value_a': 'shipment_index', 'value_b': 'number_of_shipments'})
 
-			# x:1642 y:317
+			# x:1000 y:541
 			OperatableStateMachine.add('ResetShipmentIndex',
 										ReplaceState(),
 										transitions={'done': 'GetOrder'},
 										autonomy={'done': Autonomy.Off},
-										remapping={'value': 'product_index', 'result': 'zero_value'})
+										remapping={'value': 'zero_value', 'result': 'shipment_index'})
 
-			# x:621 y:232
+			# x:1211 y:782
 			OperatableStateMachine.add('notify_shipment_ready',
 										self.use_behavior(notify_shipment_readySM, 'notify_shipment_ready'),
-										transitions={'finished': 'GetOrder', 'failed': 'failed'},
+										transitions={'finished': 'GetProductsFromShipment', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:654 y:39
+			# x:911 y:38
 			OperatableStateMachine.add('transport_part_form_bin_to_agv_state',
 										self.use_behavior(transport_part_form_bin_to_agv_stateSM, 'transport_part_form_bin_to_agv_state'),
 										transitions={'finished': 'IncrementProductIndex', 'failed': 'failed'},
